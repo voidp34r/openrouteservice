@@ -879,6 +879,19 @@ public class RoutingProfile {
 
             if (DebugUtility.isDebug()) {
                 System.out.println("visited_nodes.average - " + resp.getHints().get("visited_nodes.average", ""));
+
+                GraphHopperStorage graph = mGraphHopper.getGraphHopperStorage();
+                AllEdgesIterator edges = graph.getAllEdges();
+                EdgeFilter filter = req.getEdgeFilter();
+
+                int edgeCount = 0, acceptedCount = 0;
+                while (edges.next()) {
+                    edgeCount++;
+                    if (filter.accept(edges))
+                        acceptedCount++;
+                }
+                System.out.println("number_of_edges.total:    " + edgeCount);
+                System.out.println("number_of_edges.accepted: " + acceptedCount);
             }
 
             endUseGH();
