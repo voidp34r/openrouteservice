@@ -877,7 +877,7 @@ public class RoutingProfile {
 			else */
             resp = mGraphHopper.route(req, routeProcCntx.getArrayBuffer());
 
-            if (DebugUtility.isDebug()) {
+            //if (DebugUtility.isDebug()) {
                 System.out.println("visited_nodes.average - " + resp.getHints().get("visited_nodes.average", ""));
 
                 GraphHopperStorage graph = mGraphHopper.getGraphHopperStorage();
@@ -892,7 +892,7 @@ public class RoutingProfile {
                 }
                 System.out.println("number_of_edges.total:    " + edgeCount);
                 System.out.println("number_of_edges.accepted: " + acceptedCount);
-            }
+            //}
 
             endUseGH();
         } catch (Exception ex) {
