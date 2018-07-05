@@ -11,7 +11,7 @@ The following services are available via a RESTful interface served by Tomcat.
 
 To play around with openrouteservice you may use our [demonstration server](https://www.openrouteservice.org) which comes with both the backend and a [frontend](https://github.com/GIScience/openrouteservice-app). Or simply sign up for an API key and fire your requests against the API directly via [apiary](https://openrouteservice.docs.apiary.io/).
 
-Please note that openrouteservice uses a forked and edited version of [graphhopper 0.9](https://github.com/GIScience/graphhopper) which can be found [here](https://github.com/GIScience/graphhopper).
+Please note that openrouteservice uses a forked and edited version of [graphhopper 0.10](https://github.com/GIScience/graphhopper) which can be found [here](https://github.com/GIScience/graphhopper).
 
 [![ors client accessibility](https://user-images.githubusercontent.com/23240110/30385487-9eac96b8-98a7-11e7-9357-afd4df8fccdf.png)](https://openrouteservice.org/reach)
 
