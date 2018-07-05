@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updated the wheelchair profile to better handle restrictions such as width, kerb heights and instances where sidewalks are attached to roads. (Issue #162)
 - Replaced "Sand" surface encoding with "Paving stone"
 - Updated graphhopper to 0.10 (and related changes like additional turn instructions 'keep left/keep right')
+- Separate vehicle profiles - use only one vehicle type per profile (combining multiple vehicles into one profile is no longer supported) 
 - Updated road bike vehicle profile to stay on roads where possible and only use cycleways when ever it helps to reach the destination
 
 ### Deprecated
