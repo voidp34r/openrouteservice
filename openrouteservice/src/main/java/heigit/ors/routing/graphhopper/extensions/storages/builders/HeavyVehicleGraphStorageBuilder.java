@@ -52,6 +52,7 @@ public class HeavyVehicleGraphStorageBuilder extends AbstractGraphStorageBuilder
 	private List<String> _motorVehicleRestrictions = new ArrayList<String>(5);
 	private Set<String> _motorVehicleRestrictedValues = new HashSet<String>(5);
 	private Pattern _patternHeight;
+	private int _restrictionCounter = 0;
 
 	public HeavyVehicleGraphStorageBuilder()
 	{
@@ -166,7 +167,11 @@ public class HeavyVehicleGraphStorageBuilder extends AbstractGraphStorageBuilder
 							}
 						}
 
-						_restrictionValues[valueIndex] = Double.parseDouble(value);
+						Double val = Double.parseDouble(value);
+						_restrictionValues[valueIndex] = val;
+						
+						System.out.println("HGV_RES " + ++_restrictionCounter + " " + way.getId() + " " + key + " " + val);
+
 						_hasRestrictionValues = true;
 					}
 				}
@@ -215,8 +220,6 @@ public class HeavyVehicleGraphStorageBuilder extends AbstractGraphStorageBuilder
 					_hgvType |= HeavyVehicleAttributes.HAZMAT;
 				}
 
-				String tag = forestryTag;
-				if (tag != null) System.out.println(way.getId() + " " + tag);
 				// (access=no) + access:conditional=delivery @
 				// (07:00-11:00); customer @ (07:00-17:00)
 			}
