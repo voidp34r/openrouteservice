@@ -6,16 +6,70 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
--
+### Fixed
+### Changed
+### Deprecated
+
+## [4.7.1] - 2018-10-24
+### Added
+Added instructions to readme for installing without Docker (Issue #272)
+Added area_units for isochrones API as units being misleading (Issue #272)
+### Fixed
+- Area calculation for isochrones using metric crs (Issue #130)
+- Decreases maximum peed for bike-regular for more realistic reachability scores (Issue #325)
+- Fixes self intersecting polygons when requesting population for isochrones (Issue #297)
+- Changes center in isochrones response to snapped edge coordinate on graph (Issue #336)
+- Enable HGV axleload restriction (Issue #262)
+### Changed
+- Changed app.config.sample for docker to consider split profiles (Issue #320)
+- Changed minor information in pom.xml
+- Updated API test starting coordinates to be on a road (Issue #328)
+### Deprecated
+
+## [4.7] - 2018-10-10
+### Added
+- Removed locations code as this will be handled by openpoiservice in the future (Issue #120)
+- Removed Geocoding code as this will be handled by the geocoder service rather than within ORS
+- Added smoothing option for isochrones (Issue #137)
+- Added ExtraInfo storage for osm way id so that this information can be stored (and accessed) agianst the edges (Issue #217)
+- Added a new GeometryUtility function and its unit test to calculate the bbox for a set of coordinates (Issue #241)
+- Added support for elevation data above & and below the 60 deg N/S. When you run your own instance make sure that you specify the `elevation_provider: multi` (instead of just 'cgiar') (Issue #220)
+- Added support to keep elevation source data over various path generation processes - add to your app.config: `elevation_cache_clear: false`
+- Added support for new keep left/right turn instructions
 
 ### Fixed
+- Correct logic of determining vehicle type flags in heavy vehicle storage (Issue #211)
+- Enable OSM "key:access" tag values to take effect for heavy vehicle profile (Issue #209)
 - Fixed problem with avoid polygons excluding ways that should have been accepted (Issue #95)
+- Updated code to remove merging of instructions as this resulted in missing important turn instructions (Issue #177)
+- Added missing translations for arrival instructions (Issue #171)
+- Updated code so that acceleration is taken into account when speeds are calculated for edges (Issue #178)
+- Fixed the mising rte tag in gpx issue (Issue #196)
+- Fixed the gpx validation errror (Issue #168)
+- Added unit conversion so that isochrone response is in user specified unit (issue #91)
+- Enabled the reporting of multiple missing points in error response (issue #246)
+- Fixed wrong bounding box error (Issue #241)
+- Fixed problem with mountain bike profile never using contraction hierarchies.
 
 ### Changed
--
+- Updated the internal graphhopper libraries from 0.9.x to 0.10.1 and reduced the number of custom implementations and features.
+This implies that some of the previous features is no longer available in this release of openrouteservice. Most of these
+adjustments are under the hood and will not be noticeable for anyone. Have said that there is of course **one exception**:
+You need to create a separate profile per vehicle. In previous versions it was possible to combine multiple vehicles (like
+bike, road bike, e-bike and mtb) into a single ors-profile - this is no longer possible. Instead you need to create one
+profile for bike, one for mtb one for road bike and so on.  
+- Updated/refactored road bike flagencoder to make it more suitable for road cycling enthusiasts. Please note, that the
+generated routs might not be compliant to the local regulations - specially when 'Biking trails are obligated to be use'
+- Refactored some of the edge filters and cleaned up the code initializing them
+- Updated the wheelchair profile to better handle restrictions such as width, kerb heights and instances where sidewalks
+are attached to roads. (Issue #162)
+- Replaced "Sand" surface encoding with "Paving stone"
+- Changed the bbox api test (Issue #241)
+- Changed the way the bbox is calculated internally (Issue #241)
+- Change the license from apache 2.0 to LGPL3 (PR #296)
 
-### Depricated
--
+### Deprecated
+- Removed references to locations and accessibilty services from web.xml (Issue #186)
 
 ## [4.5.1] - 2018-03-20
 ### Fixed
