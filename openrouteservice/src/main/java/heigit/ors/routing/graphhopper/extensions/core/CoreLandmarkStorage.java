@@ -27,7 +27,6 @@ import com.graphhopper.routing.DijkstraBidirectionRef;
 import com.graphhopper.routing.lm.LandmarkStorage;
 import com.graphhopper.routing.lm.LandmarkSuggestion;
 import com.graphhopper.routing.subnetwork.SubnetworkStorage;
-import com.graphhopper.routing.subnetwork.TarjansSCCAlgorithm;
 import com.graphhopper.routing.util.*;
 import com.graphhopper.routing.util.spatialrules.SpatialRule;
 import com.graphhopper.routing.util.spatialrules.SpatialRuleLookup;
@@ -40,9 +39,7 @@ import com.graphhopper.util.*;
 import com.graphhopper.util.exceptions.ConnectionNotFoundException;
 import com.graphhopper.util.shapes.BBox;
 import com.graphhopper.util.shapes.GHPoint;
-import heigit.ors.routing.graphhopper.extensions.edgefilters.AvoidFeaturesEdgeFilter;
 import heigit.ors.routing.graphhopper.extensions.edgefilters.EdgeFilterSequence;
-import heigit.ors.routing.graphhopper.extensions.edgefilters.core.AvoidFeaturesCoreEdgeFilter;
 import heigit.ors.routing.graphhopper.extensions.edgefilters.core.LMEdgeFilterSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +78,7 @@ public class CoreLandmarkStorage implements Storable<LandmarkStorage>{
     private Weighting lmWeighting;
     private final TraversalMode traversalMode;
     private boolean initialized;
-    private int minimumNodes = 500_000;
+    private int minimumNodes = 10000;
     private final SubnetworkStorage subnetworkStorage;
     private List<LandmarkSuggestion> landmarkSuggestions = Collections.emptyList();
     private SpatialRuleLookup ruleLookup;
@@ -89,17 +86,18 @@ public class CoreLandmarkStorage implements Storable<LandmarkStorage>{
     private LMEdgeFilterSequence landmarksFilter;
     private int count = 0;
 
-    public static HashMap<Integer, Integer> coreNodeIdMap;
+    private HashMap<Integer, Integer> coreNodeIdMap;
     /**
      * 'to' and 'from' fit into 32 bit => 16 bit for each of them => 65536
      */
     static final long PRECISION = 1 << 16;
 
-    public CoreLandmarkStorage(GraphHopperStorage graph, Directory dir, final Weighting weighting, LMEdgeFilterSequence landmarksFilter, int landmarks) {
+    public CoreLandmarkStorage(Directory dir, GraphHopperStorage graph, HashMap<Integer, Integer> coreNodeIdMap, final Weighting weighting, LMEdgeFilterSequence landmarksFilter, int landmarks) {
 //        super(graph, dir, weighting, landmarks);
         this.graph = graph;
+        this.coreNodeIdMap = coreNodeIdMap;
         this.core = graph.getCoreGraph(weighting);
-        this.minimumNodes = Math.min(core.getCoreNodes() / 2, 500_000);
+        this.minimumNodes = Math.min(core.getCoreNodes() / 2, 10000);
         this.encoder = weighting.getFlagEncoder();
         this.landmarksFilter = landmarksFilter;
 //        this.lmWeighting = weighting;
@@ -201,26 +199,6 @@ public class CoreLandmarkStorage implements Storable<LandmarkStorage>{
 
             expandEdge(iter, false);
 
-    }
-
-
-    /**
-     * This method creates a mapping of CoreNode ids to integers from 0 to numCoreNodes to save space.
-     * Otherwise we would have to store a lot of empty info
-     */
-
-    public void createCoreNodeIdMap(){
-        this.coreNodeIdMap = new HashMap<>();
-        int maxNode = graph.getNodes();
-        int coreNodeLevel = maxNode + 1;
-        int index = 0;
-//        CHGraphImpl core = graph.getCoreGraph(this.weighting);
-        for (int i = 0; i < maxNode; i++){
-            if (this.core.getLevel(i) < coreNodeLevel)
-                continue;
-            coreNodeIdMap.put(i, index);
-            index++;
-        }
     }
 
     /**
@@ -467,7 +445,7 @@ public class CoreLandmarkStorage implements Storable<LandmarkStorage>{
             EdgeFilterSequence coreEdgeFilterBWD = new EdgeFilterSequence();
             coreEdgeFilterBWD.add(new CoreAndBlockedEdgesFilter(encoder, true, false, blockedEdges, graph));
 //            coreEdgeFilterBWD.add(new AvoidFeaturesCoreEdgeFilter(this.graph, 1, 1));
-            coreEdgeFilter.add(landmarksFilter);
+            coreEdgeFilterBWD.add(landmarksFilter);
             explorer.setFilter(coreEdgeFilterBWD);
             explorer.runAlgo(false, coreEdgeFilterBWD);
             explorer.initLandmarkWeights(lmIdx, lmNodeId, LM_ROW_LENGTH, TO_OFFSET);
