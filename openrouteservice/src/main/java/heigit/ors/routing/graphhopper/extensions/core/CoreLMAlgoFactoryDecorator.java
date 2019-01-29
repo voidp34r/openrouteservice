@@ -59,7 +59,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CoreLMAlgoFactoryDecorator implements RoutingAlgorithmFactoryDecorator {
     private Logger LOGGER = LoggerFactory.getLogger(CoreLMAlgoFactoryDecorator.class);
     private int landmarkCount = 16;
-    private int activeLandmarkCount = 4;
+    private int activeLandmarkCount = 8;
 
     private final List<PrepareCoreLandmarks> preparations = new ArrayList<>();
     // input weighting list from configuration file
@@ -90,7 +90,7 @@ public class CoreLMAlgoFactoryDecorator implements RoutingAlgorithmFactoryDecora
         setPreparationThreads(args.getInt(CoreLandmark.PREPARE + "threads", getPreparationThreads()));
 
         landmarkCount = args.getInt(CoreLandmark.COUNT, landmarkCount);
-        activeLandmarkCount = args.getInt(CoreLandmark.ACTIVE_COUNT, Math.min(4, landmarkCount));
+        activeLandmarkCount = args.getInt(CoreLandmark.ACTIVE_COUNT, Math.min(8, landmarkCount));
         logDetails = args.getBool(CoreLandmark.PREPARE + "log_details", false);
         minNodes = args.getInt(CoreLandmark.PREPARE + "min_network_size", -1);
 
